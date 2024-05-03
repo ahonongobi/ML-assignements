@@ -1,0 +1,536 @@
+<html>
+<head>
+<title>assignment_08.ipynb</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #808080;}
+.s1 { color: #afb9c3;}
+.s2 { color: #c88cdc;}
+.s3 { color: #96be78;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+assignment_08.ipynb</font>
+</center></td></tr></table>
+<pre><span class="s0">#%% md 
+</span><span class="s1">Please fill in your name and that of your teammate. 
+ 
+You: 
+ 
+Teammate: 
+</span><span class="s0">#%% md 
+</span><span class="s1"># Introduction 
+</span><span class="s0">#%% md 
+</span><span class="s1">Welcome to the eighth lab. Today we have _way too many_ topics to cover to do everything by hand as usual, so I selected different depths to each topic to make sure you gain full insight and applicable experience. 
+ 
+As you go through the exercise and you apply algorithm after algorithm, method after method, I want you to think about the actual **competence** you are accumulating over the months, both theoretical and applied. Think about it, and be confident: covering so many, so different algorithms in a single lab may sound like a challenge to the version of Past You from barely two months ago, but I believe Today's You is capable of taking on this whale of a lab and have space for more. 
+ 
+Working with many algorithms gives me another chance to shake you out of your confidence zone with respect to _data processing_ . Basically each algorithm requires different formats, so you cannot just define the data on top and keep reusing it: you will need to re-load the dataset for each exercise, applying a different processing each time. 
+Be flexible, and don't forget your train-test splits (and their correct usage) -- I should not need to mention it anymore, right? :) 
+ 
+Good luck, have fun! 
+</span><span class="s0">#%% md 
+</span><span class="s1">### How to pass the lab? 
+</span><span class="s0">#%% md 
+</span><span class="s1">Below you find the exercise questions. Each question awarding points is numbered and states the number of points like this: **[0pt]**. To answer a question, fill the cell below with your answer (markdown for text, code for implementation). Incorrect or incomplete answers are in principle worth 0 points: to assign partial reward is only up to teacher discretion. Over-complete answers do not award extra points (though they are appreciated and will be kept under consideration). Save your work frequently! (`ctrl+s`) 
+ 
+**You need at least 16 points (out of 24 available) to pass** (66%). 
+</span><span class="s0">#%% 
+</span><span class="s1">%matplotlib inline</span>
+<span class="s2">import </span><span class="s1">matplotlib.pyplot </span><span class="s2">as </span><span class="s1">plt</span>
+<span class="s2">import </span><span class="s1">seaborn </span><span class="s2">as </span><span class="s1">sns</span>
+<span class="s2">import </span><span class="s1">numpy </span><span class="s2">as </span><span class="s1">np</span>
+<span class="s2">import </span><span class="s1">pandas </span><span class="s2">as </span><span class="s1">pd</span>
+<span class="s1">sns.set(rc={</span><span class="s3">'figure.figsize'</span><span class="s1">:(</span><span class="s3">8</span><span class="s1">,</span><span class="s3">6</span><span class="s1">)}, style=</span><span class="s3">&quot;whitegrid&quot;</span><span class="s1">)</span>
+<span class="s0">#%% md 
+</span><span class="s1"># 1. Fundamentals 
+</span><span class="s0">#%% md 
+</span><span class="s1">#### 1.1 **[1pt]** Write an example (in English) of a Machine Learning application for which the Supervised Learning paradigm is not (directly) applicable. 
+</span><span class="s0">#%% md 
+</span><span class="s1">R: One example of a Machine Learning application for which the Supervised Learning paradigm is not directly applicable is the case of anomaly detection. In this case, the data is not labeled, and the goal is to identify patterns that do not conform to expected behavior. Anomaly detection can be used in various fields, such as fraud detection, network security, and health monitoring, among others. In this scenario, the lack of labeled data makes it difficult to apply supervised learning algorithms, as they require labeled data to learn the relationship between input features and output labels. Instead, unsupervised learning algorithms, such as clustering or density estimation, can be used to identify anomalies in the data without the need for labeled examples. 
+</span><span class="s0">#%% md 
+</span><span class="s1">#### 1.2 **[1pt]** Write an example (in English) of a Machine Learning application for which the Unsupervised Learning paradigm is an ideal choice. 
+</span><span class="s0">#%% md 
+</span><span class="s1">R: One example of a Machine Learning application for which the Unsupervised Learning paradigm is an ideal choice is customer segmentation. In this case, the goal is to group customers based on their purchasing behavior, preferences, or other characteristics. Since the data is not labeled, unsupervised learning algorithms can be used to identify patterns and group customers into distinct segments without the need for labeled examples. This can help businesses better understand their customer base, tailor marketing strategies, and improve customer satisfaction. 
+</span><span class="s0">#%% md 
+</span><span class="s1"># 2. Clustering 
+</span><span class="s0">#%% md 
+</span><span class="s1">#### 2.1 **[2pt]** Explain the $k$-means algorithm using a few words of your own. Particularly, state any requirements, and what the user needs to define. 
+</span><span class="s0">#%% md 
+</span><span class="s1">- To use &quot;your own words&quot;, a trick is to read the slide, decide which things you need to mention, then close the slide and imagine a friend with only basic technical background in front of you (aka &quot;rubberducking&quot;, Google it!). Now tell this person the things that you decided to mention. 
+- No need to go crazy. This is a type of (vague!) question that you will need to answer over and over, typically to convince your boss to let you use a particular method, or to guide someone with less knowledge in the field. It's not a right/wrong question: you need to show that you have competence, list the key points, be brief and to the point. 
+- And of course, copy+paste+change words from the slide will score you 0 points :) while a sincere, fair try that is not wrong will pass, so no worries. 
+</span><span class="s0">#%% md 
+</span><span class="s1">The $k$-means algorithm is a data clustering technique that divides a dataset into $k$ distinct groups, called clusters. The user needs to define the number of clusters ($k$) to create. The algorithm then iterates to assign data points to the nearest clusters and updates the cluster centers until convergence, aiming to minimize the variation within each cluster. 
+</span><span class="s0">#%% md 
+</span><span class="s1">For the next question, we need to understand how to evaluate a clustering algorithm. The main difference between clustering and classification is that, well, it's UL not SL: the labels are not involved in the training, and they should not be involved in the testing. So how do you test the performance of a clustering algorithm? 
+ 
+Each mean/cluster gets a numerical identifier, the only problem is that the number does not correspond to our labels because it's assigned randomly based on initialization. The most naïve way then is to brute-force all mappings between the labels and the cluster numbers: the one that makes the most sense is the one that should be used for evaluation. Since this is orthogonal to the lecture and may take a long time to debug, here is a snippet of code that does that. 
+ 
+Read it, understand it, play with it, and possibly improve it. Bruteforcing is rarely optimal, which is the very reason why ML exists :)   
+(note: it may be easier to understand it if you first go ahead with answering the next question first, then come back to this) 
+</span><span class="s0">#%% 
+# Goal: convert the labels to the cluster numbers generated by k-means</span>
+<span class="s2">import </span><span class="s1">itertools</span>
+<span class="s1">species_names = sns.load_dataset(</span><span class="s3">'iris'</span><span class="s1">).species.unique()</span>
+<span class="s1">possible_codes = itertools.permutations(range(len(species_names)))</span>
+<span class="s1">converters = [dict(zip(species_names, perm)) </span><span class="s2">for </span><span class="s1">perm </span><span class="s2">in </span><span class="s1">possible_codes]</span>
+<span class="s0"># try printing each of these variables and understand what they do</span>
+<span class="s1">print(converters)</span>
+<span class="s2">def </span><span class="s1">cluster_to_class(model, fn_that_counts_misclassified, x_test, y_test):</span>
+    <span class="s1">min_score = np.Infinity </span><span class="s0"># we saw how to write a minimizer already right?</span>
+    <span class="s1">right_conversion = </span><span class="s2">None</span>
+    <span class="s2">for </span><span class="s1">converter </span><span class="s2">in </span><span class="s1">converters:</span>
+        <span class="s1">conv_y_test = y_test.replace(converter) </span><span class="s0"># conveniently works with `dict`s</span>
+        <span class="s1">misclassified = fn_that_counts_misclassified(model, x_test, conv_y_test)</span>
+        <span class="s2">if </span><span class="s1">misclassified &lt; min_score:</span>
+            <span class="s1">min_score = misclassified</span>
+            <span class="s1">right_conversion = converter</span>
+    <span class="s2">return </span><span class="s1">right_conversion</span>
+
+<span class="s0">## to use this function, you will need something like this</span>
+<span class="s0"># right_conversion = cluster_to_class(k_means_model, my_misclass_fn, x_test, y_test)</span>
+<span class="s0"># conv_y_test = y_test.replace(right_conversion)</span>
+<span class="s0"># k_means_misclassified = my_misclass_fn(k_means_model, x_test, conv_y_test)</span>
+<span class="s0">#%% md 
+</span><span class="s1">#### 2.2 **[3pt]** Apply the scikit-learn implementation of the $k$-means algorithm to the Iris dataset (4 features, but drop the labels for training), and print a performance score of your choice. 
+</span><span class="s0">#%% md 
+</span><span class="s1">- Of course you want to pass $k=3$. 
+- Passing the trained `KMeans` object to `print()` shows several useful parameters and their default values. 
+- After you get it to work though, why don't you try $k=2$ or $k=4$ and see what happens when you have to _guess_ $k$ (which is the normal case in real applications). 
+- For the performance score, remember this is [clustering, not classification](https://stackoverflow.com/a/48617825/6392246), which means `score()` will ignore the labels and print &quot;strange numbers&quot;. No worries, you know how to make your own scoring from the past labs, right? 
+- Notice how $k$-means is _very_ sensitive to initialization. To get a consistently better result you may want to explore options `max_iter`, `n_jobs` and of course `init`. 
+</span><span class="s0">#%% 
+</span><span class="s2">from </span><span class="s1">sklearn.datasets </span><span class="s2">import </span><span class="s1">load_iris</span>
+<span class="s2">from </span><span class="s1">sklearn.cluster </span><span class="s2">import </span><span class="s1">KMeans</span>
+<span class="s2">import </span><span class="s1">numpy </span><span class="s2">as </span><span class="s1">np</span>
+
+<span class="s2">def </span><span class="s1">calculate_wcss(data, k):</span>
+    <span class="s0">&quot;&quot;&quot; 
+    Calculate the within-cluster sum of squares (WCSS) for a given dataset and number of clusters (k). 
+     
+    Parameters: 
+        data (array-like): The input data. 
+        k (int): The number of clusters. 
+     
+    Returns: 
+        float: The WCSS score. 
+    &quot;&quot;&quot;</span>
+    <span class="s0"># Applying k-means algorithm with k clusters</span>
+    <span class="s1">kmeans = KMeans(n_clusters=k, max_iter=</span><span class="s3">300</span><span class="s1">, n_jobs=-</span><span class="s3">1</span><span class="s1">, init=</span><span class="s3">'k-means++'</span><span class="s1">)</span>
+    <span class="s1">kmeans.fit(data)</span>
+
+    <span class="s0"># Calculate the within-cluster sum of squares (WCSS)</span>
+    <span class="s1">wcss = sum(np.min(kmeans.transform(data), axis=</span><span class="s3">1</span><span class="s1">)**</span><span class="s3">2</span><span class="s1">)</span>
+
+    <span class="s2">return </span><span class="s1">wcss</span>
+
+<span class="s0"># Load the Iris dataset</span>
+<span class="s1">iris = load_iris()</span>
+<span class="s1">data = iris.data  </span><span class="s0"># use the data (features) only, excluding the labels</span>
+
+<span class="s0"># Define the number of clusters</span>
+<span class="s1">k = </span><span class="s3">3</span>
+
+<span class="s0"># Applying k-means algorithm with k clusters</span>
+<span class="s1">kmeans = KMeans(n_clusters=k, max_iter=</span><span class="s3">300</span><span class="s1">, n_jobs=-</span><span class="s3">1</span><span class="s1">, init=</span><span class="s3">'k-means++'</span><span class="s1">)</span>
+<span class="s1">kmeans.fit(data)</span>
+
+<span class="s0"># Print some useful information about the fitted model</span>
+<span class="s1">print(</span><span class="s3">&quot;Parameters of the trained KMeans object:&quot;</span><span class="s1">)</span>
+<span class="s1">print(kmeans)</span>
+
+<span class="s0"># Calculate and print the within-cluster sum of squares (WCSS) as a performance score</span>
+<span class="s1">wcss_score = calculate_wcss(data, k)</span>
+<span class="s1">print(</span><span class="s3">&quot;WCSS Score:&quot;</span><span class="s1">, wcss_score)</span>
+
+<span class="s0">#%% 
+</span><span class="s2">import </span><span class="s1">numpy </span><span class="s2">as </span><span class="s1">np</span>
+<span class="s2">from </span><span class="s1">sklearn.cluster </span><span class="s2">import </span><span class="s1">KMeans</span>
+<span class="s2">from </span><span class="s1">sklearn.datasets </span><span class="s2">import </span><span class="s1">load_iris</span>
+<span class="s2">from </span><span class="s1">sklearn.preprocessing </span><span class="s2">import </span><span class="s1">StandardScaler</span>
+<span class="s2">import </span><span class="s1">seaborn </span><span class="s2">as </span><span class="s1">sns</span>
+<span class="s2">import </span><span class="s1">itertools</span>
+
+<span class="s0"># Load the Iris dataset</span>
+<span class="s1">iris = load_iris()</span>
+<span class="s1">X = iris.data</span>
+<span class="s1">y = iris.target</span>
+
+<span class="s0"># Standardize the features</span>
+<span class="s1">scaler = StandardScaler()</span>
+<span class="s1">X_scaled = scaler.fit_transform(X)</span>
+
+<span class="s0"># Define the number of clusters (k)</span>
+<span class="s1">k = </span><span class="s3">3</span>
+
+<span class="s0"># Apply k-means algorithm</span>
+<span class="s1">kmeans = KMeans(n_clusters=k, random_state=</span><span class="s3">42</span><span class="s1">)</span>
+<span class="s1">kmeans.fit(X_scaled)</span>
+
+<span class="s0"># Define the function that counts misclassified points</span>
+<span class="s2">def </span><span class="s1">misclass_fn(model, x_test, y_test):</span>
+    <span class="s1">predictions = model.predict(x_test)</span>
+    <span class="s1">misclassified = np.sum(predictions != y_test)</span>
+    <span class="s2">return </span><span class="s1">misclassified</span>
+
+<span class="s0"># Define species names and possible mappings between labels and cluster IDs</span>
+<span class="s1">species_names = iris.target_names</span>
+<span class="s1">possible_codes = itertools.permutations(range(len(species_names)))</span>
+<span class="s1">converters = [dict(zip(species_names, perm)) </span><span class="s2">for </span><span class="s1">perm </span><span class="s2">in </span><span class="s1">possible_codes]</span>
+
+<span class="s0"># Function to map cluster IDs to labels and compute misclassified points</span>
+<span class="s2">def </span><span class="s1">cluster_to_class(model, fn_that_counts_misclassified, x_test, y_test):</span>
+    <span class="s1">min_score = np.Infinity</span>
+    <span class="s1">right_conversion = </span><span class="s2">None</span>
+    <span class="s2">for </span><span class="s1">converter </span><span class="s2">in </span><span class="s1">converters:</span>
+        <span class="s1">conv_y_test = [converter[species_names[label]] </span><span class="s2">for </span><span class="s1">label </span><span class="s2">in </span><span class="s1">y_test]</span>
+        <span class="s1">misclassified = fn_that_counts_misclassified(model, x_test, conv_y_test)</span>
+        <span class="s2">if </span><span class="s1">misclassified &lt; min_score:</span>
+            <span class="s1">min_score = misclassified</span>
+            <span class="s1">right_conversion = converter</span>
+    <span class="s2">return </span><span class="s1">right_conversion, min_score</span>
+
+<span class="s0"># Function to compute accuracy -  score</span>
+<span class="s2">def </span><span class="s1">compute_accuracy(model, x_test, y_test):</span>
+    <span class="s1">predictions = model.predict(x_test)</span>
+    <span class="s1">correct = np.sum(predictions == y_test)</span>
+    <span class="s1">total = len(y_test)</span>
+    <span class="s1">accuracy = correct / total</span>
+    <span class="s2">return </span><span class="s1">accuracy</span>
+
+
+<span class="s0"># Map cluster IDs to labels and compute misclassified points</span>
+<span class="s1">right_conversion, misclassified = cluster_to_class(kmeans, misclass_fn, X_scaled, y)</span>
+<span class="s1">accuracy = compute_accuracy(kmeans, X_scaled, [right_conversion[species_names[label]] </span><span class="s2">for </span><span class="s1">label </span><span class="s2">in </span><span class="s1">y])</span>
+
+<span class="s1">print(</span><span class="s3">&quot;Right Conversion:&quot;</span><span class="s1">, right_conversion)</span>
+<span class="s1">print(</span><span class="s3">&quot;Misclassified Points:&quot;</span><span class="s1">, misclassified)</span>
+<span class="s1">print(</span><span class="s3">&quot;Accuracy:&quot;</span><span class="s1">, accuracy)</span>
+
+<span class="s0">#%% md 
+</span><span class="s1">#### 2.3 **[1pt]** Plot the centroids learned with $k$-means on top of the data. 
+</span><span class="s0">#%% md 
+</span><span class="s1">- To get the centroids coordinates, access attribute `cluster_centers_` of the KMeans object. Here are some options I passed to `scatterplot` for visibility (remember you can use the [double-splat](https://stackoverflow.com/questions/36901/what-does-double-star-asterisk-and-star-asterisk-do-for-parameters) to transform the dict into keyword parameters): 
+```python 
+kwargs = {'marker':'X', 'color':'r', 's':200, 'label':'centroids'} 
+``` 
+- The question does not specify the details of what to plot, so it's up to you to provide a correct and useful interpretation. You learned how to make useful plots, just be confident. 
+- The simplest is of course to reproduce what we saw so far: one plot, `petal_width` vs. `petal_length`. As they are the last two features, make sure to pick the corresponding coordinates from the centroids. Remember your ranges and your `transpose()` ;)  
+- Even fancier: why not converting it to a DataFrame? Remember to drop the `species` column when constructing the `df`, as the centroids (learned with UL) have no species information (and thus one less column than iris): `columns=iris.columns.drop('species')` 
+- After answering correctly, if you want to learn something useful and fancy, try plotting a [[PairGrid]](https://seaborn.pydata.org/generated/seaborn.PairGrid.html) that mimics a PairPlot but with added clusters off-diagonal. If you want the usual distributions on the diagonal, it is time to learn it is done with _Density Estimation_ (which is what you learned to do for Gaussians in NB), automated in Seaborn with `kdeplot()`. 
+</span><span class="s0">#%% 
+</span><span class="s2">import </span><span class="s1">seaborn </span><span class="s2">as </span><span class="s1">sns</span>
+<span class="s2">import </span><span class="s1">matplotlib.pyplot </span><span class="s2">as </span><span class="s1">plt</span>
+
+<span class="s0"># Get the centroids coordinates</span>
+<span class="s1">centroids = kmeans.cluster_centers_</span>
+
+<span class="s0"># Create a scatter plot of the data points using Seaborn</span>
+<span class="s1">sns.scatterplot(x=X_scaled[:, </span><span class="s3">3</span><span class="s1">], y=X_scaled[:, </span><span class="s3">2</span><span class="s1">], hue=y, palette=</span><span class="s3">'viridis'</span><span class="s1">)</span>
+
+<span class="s0"># Overlay the centroids on the scatter plot using Matplotlib</span>
+<span class="s1">plt.scatter(centroids[:, </span><span class="s3">3</span><span class="s1">], centroids[:, </span><span class="s3">2</span><span class="s1">], marker=</span><span class="s3">'*'</span><span class="s1">, color=</span><span class="s3">'r'</span><span class="s1">, s=</span><span class="s3">300</span><span class="s1">, label=</span><span class="s3">'centroids'</span><span class="s1">)</span>
+
+<span class="s0"># Set labels and title</span>
+<span class="s1">plt.xlabel(</span><span class="s3">'Petal Length'</span><span class="s1">)</span>
+<span class="s1">plt.ylabel(</span><span class="s3">'Petal Width'</span><span class="s1">)</span>
+<span class="s1">plt.title(</span><span class="s3">'K-means Clustering with Centroids'</span><span class="s1">)</span>
+
+<span class="s0"># Add legend</span>
+<span class="s1">plt.legend()</span>
+
+<span class="s0"># Show plot</span>
+<span class="s1">plt.show()</span>
+
+<span class="s0">#%% md 
+</span><span class="s1">Note: this is a very basic application: while a decent knowledge of $k$-means can typically be useful in itself, the focus here is to cements your understanding of clustering, centroid, expectation maximization, and the difference between clustering and classification. For further reading, I strongly suggest you have a look at [[this very complete tutorial]](https://towardsdatascience.com/k-means-clustering-algorithm-applications-evaluation-methods-and-drawbacks-aa03e644b48a). 
+</span><span class="s0">#%% md 
+</span><span class="s1">#### 2.4 **[2pt]** Train a scikit-learn OneClassSVM on the _versicolor_ class of the Iris dataset, and print the number of missed outliers. 
+</span><span class="s0">#%% md 
+</span><span class="s1">- Careful with the input: you need to train this SVM only on the subset of the train data where the species is `versicolor`. That's &quot;one-class&quot;. The training should not have access to data from the other two species. 
+- Also remember to drop the species column (as always) after selecting the lines with `versicolor`. 
+- The test inputs should work as expected, but the test labels should be converted so that `versicolor` is `1` and the others are `-1` (because those are the model outputs for &quot;normal&quot; and &quot;outlier&quot;). 
+- Again, to compute the missed outliers, you cannot use `score()` or `plot_confusion_matrix()` because technically it's not a classifier. But you already made a function of the scoring code for the previous question right? 
+</span><span class="s0">#%% 
+</span><span class="s2">from </span><span class="s1">sklearn.svm </span><span class="s2">import </span><span class="s1">OneClassSVM</span>
+
+<span class="s0"># Select only the data points corresponding to the versicolor class</span>
+<span class="s1">versicolor_mask = iris.target == </span><span class="s3">1</span>
+<span class="s1">X_versicolor = X_scaled[versicolor_mask]</span>
+
+<span class="s0"># Train the One-Class SVM</span>
+<span class="s1">svm = OneClassSVM()</span>
+<span class="s1">svm.fit(X_versicolor)</span>
+
+<span class="s0"># Convert test labels so that versicolor is labeled as 1 and the others are labeled as -1</span>
+<span class="s1">y_test_binary = np.where(iris.target == </span><span class="s3">1</span><span class="s1">, </span><span class="s3">1</span><span class="s1">, -</span><span class="s3">1</span><span class="s1">)</span>
+
+<span class="s0"># Define the function that counts misclassified points</span>
+<span class="s2">def </span><span class="s1">misclass_fn_svm(model, x_test, y_test):</span>
+    <span class="s1">predictions = model.predict(x_test)</span>
+    <span class="s1">misclassified = np.sum(predictions != y_test)</span>
+    <span class="s2">return </span><span class="s1">misclassified</span>
+<span class="s0"># Compute the number of missed outliers based on the predictions made by the One-Class SVM</span>
+<span class="s1">missed_outliers = misclass_fn_svm(svm, X_scaled, y_test_binary)</span>
+<span class="s1">print(</span><span class="s3">&quot;Number of missed outliers:&quot;</span><span class="s1">, missed_outliers)</span>
+
+<span class="s0">#%% 
+</span>
+<span class="s2">from </span><span class="s1">sklearn.svm </span><span class="s2">import </span><span class="s1">OneClassSVM</span>
+<span class="s2">import </span><span class="s1">numpy </span><span class="s2">as </span><span class="s1">np</span>
+
+<span class="s0"># select the versicolor data and target</span>
+<span class="s1">versicolor_data = iris.data[iris.target == </span><span class="s3">1</span><span class="s1">]  </span><span class="s0"># Sélectionner les données pour la classe versicolor</span>
+<span class="s1">versicolor_target = np.ones(len(versicolor_data))  </span><span class="s0"># Créer des étiquettes pour la classe versicolor (1)</span>
+
+<span class="s0"># Train the OneClassSVM model</span>
+<span class="s1">svm_model = OneClassSVM()</span>
+<span class="s1">svm_model.fit(versicolor_data)</span>
+
+<span class="s0"># Convert the labels for the test data</span>
+<span class="s2">def </span><span class="s1">convert_labels(labels):</span>
+    <span class="s2">return </span><span class="s1">np.where(labels == </span><span class="s3">1</span><span class="s1">, </span><span class="s3">1</span><span class="s1">, -</span><span class="s3">1</span><span class="s1">)  </span><span class="s0"># Convertir versicolor en 1 et les autres en -1</span>
+
+<span class="s0"># Calculate the number of missed outliers</span>
+<span class="s2">def </span><span class="s1">calculate_missed_outliers(model, x_test, y_test):</span>
+    <span class="s1">y_pred = model.predict(x_test)</span>
+    <span class="s1">y_test_converted = convert_labels(y_test)</span>
+    <span class="s1">missed_outliers = np.sum(y_pred != y_test_converted)</span>
+    <span class="s2">return </span><span class="s1">missed_outliers</span>
+
+<span class="s0"># Convert the labels for the test data</span>
+<span class="s1">test_labels = np.ones(len(versicolor_data))  </span><span class="s0"># Les étiquettes sont toutes versicolor (1)</span>
+
+<span class="s0"># Calculate the number of missed outliers</span>
+<span class="s1">missed_outliers = calculate_missed_outliers(svm_model, versicolor_data, test_labels)</span>
+<span class="s1">print(</span><span class="s3">&quot;Nombre d'outliers manqués:&quot;</span><span class="s1">, missed_outliers)</span>
+<span class="s0">#%% md 
+</span><span class="s1"># 3. Compression and encoding 
+</span><span class="s0">#%% md 
+</span><span class="s1">There are too many topics to cover for this lab. Having to choose one to cut off from practice, I had to objectively decide to remove my favorite one: compression and encoding. The reason is that in most jobs experience in the others will be more useful, while you will still see plenty of encoding techniques over the course. And the concept of dictionary building is related to $k$-means and feature extraction anyway. 
+ 
+On the other hand, understanding dictionaries as features, and encodings as mappings, allows for a much deeper competence and broader flexibility in the field than being stuck to only the &quot;big guns&quot; of Deep Learning for this task. 
+ 
+So my gift to you is one of my favorite papers so far: &quot;The Importance of Encoding Versus Training with Sparse Coding and Vector Quantization&quot;, from A. Coates and A. Ng [[link]](http://ai.stanford.edu/~acoates/papers/coatesng_icml_2011.pdf). 
+ 
+If you want to learn the state of the art, in any scientific field, you need to learn to read papers. A good suggestion not to be overwhelmed, especially at the beginning while building knowledge and glossary, is to read it this way 
+ 
+- First the abstract 
+- Then think about it and read the abstract again 
+- Now read the introduction, but don't fret about terms you don't understand, it's normal 
+- Next read the conclusion, and make sure their claims make sense with what you read so far 
+- The &quot;discussion&quot; explains how they interpreted their results and built the conclusion, which could be invaluable to understand their claims 
+- If you want more detail on the &quot;how&quot;, check out the &quot;method&quot; section (here called &quot;learning framework&quot;) 
+- The &quot;related work&quot; (sometimes &quot;literature review&quot;) gives you pointers to extend your study on the field and applications 
+- Do not overlook &quot;experimental results&quot;, as it will give you the means to reproduce their results. And yes, chances are your thesis (especially if Master) will begin by asking you to reproduce a paper's result. Repeatability and verification (the hypothesis needs to be falsifiable) are at the very core of the scientific process. 
+ 
+So: go at least through abstract, introduction and conclusions, and then answer the following question: 
+</span><span class="s0">#%% md 
+</span><span class="s1">#### 3.1 **[4pt]** In the conclusion of the paper &quot;The Importance of Encoding Versus Training with Sparse Coding and Vector Quantization&quot;, which part do the authors find more effective, the encoding (i.e. decision-making) or the dictionary training (i.e. feature extraction)? Reflect on the consequences on modeling, and express your opinion on Feature Extraction and Decision Mappings. 
+</span><span class="s0">#%% md 
+</span><span class="s1">The solution will contain no &quot;right&quot; answer, just **my** answer. It actually constitutes one the foundations of my research. Full points will be awarded to anyone (i) asserting their opinion, and (ii) justifying it with findings from the paper. 
+</span><span class="s0">#%% md 
+</span>
+<span class="s0">#%% md 
+</span><span class="s1"># 4. Matrix decomposition 
+</span><span class="s0">#%% md 
+</span><span class="s1">#### 4.1 **[1pt]** For this data imputation exercise, use the entire Iris dataset (no split in train/test, but do drop `species`). Select the value in row index 110 column index 1, and store it in an outside variable. Then delete it from the dataset. 
+</span><span class="s0">#%% md 
+</span><span class="s1">- To delete a value from a dataset, simply assign the `not a number` value `np.nan` to the corresponding element. 
+- Have you tried using `drop()` to remove a column? Remember that the default axis is the rows, so you need to pass `axis=1` or `axis='columns'` to drop a column by name. 
+- You can print a few rows around your target to verify everything is going as you expect. 
+</span><span class="s0">#%% 
+</span><span class="s2">import </span><span class="s1">seaborn </span><span class="s2">as </span><span class="s1">sns</span>
+<span class="s2">import </span><span class="s1">numpy </span><span class="s2">as </span><span class="s1">np</span>
+
+<span class="s0"># Load the Iris dataset</span>
+<span class="s1">iris = sns.load_dataset(</span><span class="s3">'iris'</span><span class="s1">)</span>
+
+<span class="s0"># drop the species column using drop() with axis=1 or axis='columns'</span>
+<span class="s1">iris = iris.drop(</span><span class="s3">'species'</span><span class="s1">, axis=</span><span class="s3">1</span><span class="s1">)</span>
+<span class="s0"># Select the value in row index 110 in target_row_idx variable and  , column index 1 in target_col_idx </span>
+<span class="s1">target_row_idx  = </span><span class="s3">110</span>
+<span class="s1">target_col_idx = </span><span class="s3">1</span>
+
+<span class="s1">value_to_store = iris.iloc[target_row_idx, target_col_idx]</span>
+
+<span class="s1">print(value_to_store)</span>
+
+<span class="s0"># Delete the value from the dataset using</span>
+<span class="s1">iris.iloc[</span><span class="s3">110</span><span class="s1">, </span><span class="s3">1</span><span class="s1">] = np.nan</span>
+
+<span class="s0"># Verify changes by printing a few rows around the target</span>
+<span class="s1">print(iris.iloc[</span><span class="s3">108</span><span class="s1">:</span><span class="s3">112</span><span class="s1">, :])</span>
+<span class="s0">#%% md 
+</span><span class="s1">#### 4.2 **[4pt]** Reconstruct (impute) the missing value using SVD and dimensionality reduction-based denoising. Do not use scikit-learn. Use the SVD method from `np.linalg`. Print the (absolute) difference between the original and reconstructed values. 
+</span><span class="s0">#%% md 
+</span><span class="s1">- Ok, relax, this is not your first complex question. As usual, deconstruct the process in smaller, achievable goals, then work through them step by step. 
+- The first thing you need to do is to get rid of is the &quot;hole&quot; in the data, because SVD will not work with `nan` values. Simply patch it with an average of the values above and below in the same feature. We know this is not ideal, but no worries. BTW congratulations with this you just learned the foundation of the **$k$-nearest-neighbors algorithm (KNN)**. 
+- Now decompose the entire dataframe('s data matrix) using the SVD implementation in numpy's `linalg` module. Read carefully the documentation: it does not return `u`, $\Sigma$ and `v` as expected from the lecture! Instead you get `v` as expected $n \times n$; `s` a vector of size $n$ containing the $\sigma$ eigenvalues (the diagonal of $\Sigma$, remember?); and `vh` $m \times m$ is the transposition of `v` -- saves a transpose, but remember you will need to zero a _row_ not a _column_. 
+- Next you want to drop the least contributing eigenvector. Find the smallest non-zero eigenvalue, and set to zero the corresponding column in `u` and row in `vh`. The relative size also tells you how much precision will you be losing with this reduction. 
+- Now you can already reconstruct the data. Remember the order of the dot products matters. Also, you need to build your $\Sigma$. There's an example in the documentation of SVD. Importantly: $\Sigma$ is rectangular, the eigenvalues go in the diagonal of the first &quot;square&quot; of this matrix, the rest is zeros. You can set a range of rows and columns of a numpy rectangular matrix to (the values of) a diagonal matrix created with `np.diag()`, just match the sizes. 
+- Fetch the value in the target element's position in the reconstruction matrix. Has it changed w.r.t. its initial estimate? Print the difference with the original and technically you're done. 
+- If you are unsatisfied with the result though, you can run the cycle a few times. Place the code written so far in a function, so you can iterate multiple calls. Remember that you need to insert the new value in the _original matrix_ , and then loop all your calls to the denoising function on this matrix. Looping on the reconstruction is a common error which may cost you a lot! With every denoising you are losing a bit of information; copying only the value you are denoising reintegrates the information in the rest of the matrix, allowing for a much more accurate result. 
+- I converge (i.e. no more significant changes) to within 0.07 of the correct value in 50 iterations. I also simply save the errors (abs diff) at every iteration, then do the usual `lineplot`. Nothing new, but these sanity checks are priceless when working with ML. 
+- Alternatively: what happens if you drop two columns instead of one? 
+</span><span class="s0">#%% 
+</span><span class="s2">import </span><span class="s1">numpy </span><span class="s2">as </span><span class="s1">np</span>
+<span class="s2">import </span><span class="s1">pandas </span><span class="s2">as </span><span class="s1">pd</span>
+
+<span class="s0"># 1. Patch the missing value with the average of the values above and below</span>
+<span class="s2">def </span><span class="s1">patch_missing_value(data, row_idx, col_idx):</span>
+    <span class="s1">above_value = data.iloc[row_idx - </span><span class="s3">1</span><span class="s1">, col_idx]</span>
+    <span class="s1">below_value = data.iloc[row_idx + </span><span class="s3">1</span><span class="s1">, col_idx]</span>
+    <span class="s1">patched_value = (above_value + below_value) / </span><span class="s3">2</span>
+    <span class="s1">data.iloc[row_idx, col_idx] = patched_value</span>
+
+<span class="s0"># 2. Perform SVD decomposition</span>
+<span class="s2">def </span><span class="s1">svd_decomposition(data):</span>
+    <span class="s1">u, s, vh = np.linalg.svd(data, full_matrices=</span><span class="s2">False</span><span class="s1">)</span>
+    <span class="s2">return </span><span class="s1">u, s, vh</span>
+
+<span class="s0"># 3. Drop the least contributing eigenvector</span>
+<span class="s2">def </span><span class="s1">drop_least_contributing_eigenvector(u, s, vh):</span>
+    <span class="s1">min_idx = np.argmin(s)</span>
+    <span class="s1">s[min_idx] = </span><span class="s3">0</span>
+    <span class="s1">u[:, min_idx] = </span><span class="s3">0</span>
+    <span class="s1">vh[min_idx, :] = </span><span class="s3">0</span>
+    <span class="s2">return </span><span class="s1">u, s, vh</span>
+
+<span class="s0"># 4. Reconstruct the data matrix</span>
+<span class="s2">def </span><span class="s1">reconstruct_data(u, s, vh):</span>
+    <span class="s1">sigma = np.diag(s)</span>
+    <span class="s1">reconstructed_data = np.dot(u, np.dot(sigma, vh))</span>
+    <span class="s2">return </span><span class="s1">reconstructed_data</span>
+
+<span class="s0"># 5. Calculate the absolute difference between original and reconstructed values</span>
+<span class="s2">def </span><span class="s1">calculate_absolute_difference(original_value, reconstructed_value):</span>
+    <span class="s1">abs_diff = np.abs(original_value - reconstructed_value)</span>
+    <span class="s2">return </span><span class="s1">abs_diff</span>
+
+<span class="s0"># 6. Iterate the denoising process</span>
+<span class="s2">def </span><span class="s1">iterative_denoising(data, target_row_idx, target_col_idx, num_iterations):</span>
+    <span class="s1">errors = []</span>
+    <span class="s2">for </span><span class="s1">_ </span><span class="s2">in </span><span class="s1">range(num_iterations):</span>
+        <span class="s1">patch_missing_value(data, target_row_idx, target_col_idx)</span>
+        <span class="s1">u, s, vh = svd_decomposition(data.values)</span>
+        <span class="s1">u, s, vh = drop_least_contributing_eigenvector(u, s, vh)</span>
+        <span class="s1">reconstructed_data = reconstruct_data(u, s, vh)</span>
+        <span class="s1">reconstructed_value = reconstructed_data[target_row_idx, target_col_idx]</span>
+        <span class="s1">original_value = data.iloc[target_row_idx, target_col_idx]</span>
+        <span class="s1">abs_diff = calculate_absolute_difference(original_value, reconstructed_value)</span>
+        <span class="s1">errors.append(abs_diff)</span>
+    <span class="s2">return </span><span class="s1">reconstructed_data, errors</span>
+
+<span class="s0"># Load the Iris dataset</span>
+<span class="s0">#iris = sns.load_dataset('iris')</span>
+
+<span class="s0">#Select the value in row index 110, column index 1</span>
+<span class="s0">#target_row_idx = 110</span>
+<span class="s0">#target_col_idx = 1</span>
+
+<span class="s0"># Store the original value before patching</span>
+<span class="s0"># original_value = iris.iloc[target_row_idx, target_col_idx]</span>
+<span class="s1">original_value = value_to_store</span>
+
+<span class="s0"># Patch the missing value</span>
+<span class="s1">patch_missing_value(iris, target_row_idx, target_col_idx)</span>
+
+<span class="s0"># Define the number of iterations for iterative denoising</span>
+<span class="s1">num_iterations = </span><span class="s3">50</span>
+
+<span class="s0"># Perform iterative denoising</span>
+<span class="s1">reconstructed_data, errors = iterative_denoising(iris, target_row_idx, target_col_idx, num_iterations)</span>
+
+<span class="s0"># Calculate the final reconstructed value</span>
+<span class="s1">final_reconstructed_value = reconstructed_data[target_row_idx, target_col_idx]</span>
+
+<span class="s0"># Print the absolute difference between the original and reconstructed values</span>
+<span class="s1">print(original_value)</span>
+<span class="s1">print(final_reconstructed_value)</span>
+<span class="s1">print(</span><span class="s3">&quot;Absolute difference between original and reconstructed values:&quot;</span><span class="s1">, np.abs(original_value - final_reconstructed_value))</span>
+
+<span class="s0"># Plot the errors at each iteration</span>
+<span class="s2">import </span><span class="s1">matplotlib.pyplot </span><span class="s2">as </span><span class="s1">plt</span>
+<span class="s1">plt.plot(errors)</span>
+<span class="s1">plt.xlabel(</span><span class="s3">'Iteration'</span><span class="s1">)</span>
+<span class="s1">plt.ylabel(</span><span class="s3">'Absolute Difference'</span><span class="s1">)</span>
+<span class="s1">plt.title(</span><span class="s3">'Absolute Difference vs. Iteration'</span><span class="s1">)</span>
+<span class="s1">plt.show()</span>
+<span class="s0">#%% md 
+</span><span class="s1">#### 4.3 **[3pt]** Plot the entire Iris dataset (no split, keep the classes) projected into 2 dimensions using PCA. Use scikit-learn to compute the principal components. 
+</span><span class="s0">#%% md 
+</span><span class="s1">- Yes, you need to reproduce the same picture as in the slides :) 
+- You need a fresh copy of the Iris dataset, then `sklearn` requires the labels to be numeric. Do you remember the `astype('category').cat.codes` trick? 
+- Check the documentation of PCA. You need to set the `n_components` parameter. 
+- Projecting data on the principal components is much, much easier by using the `transform()` function. 
+- For a neat one-line plot with Seaborn, convert the projected data back to a DataFrame and name the columns! Then add back the `species` column so you can use `hue` ;) and use a nice palette! 
+</span><span class="s0">#%% 
+</span><span class="s2">import </span><span class="s1">seaborn </span><span class="s2">as </span><span class="s1">sns</span>
+<span class="s2">import </span><span class="s1">pandas </span><span class="s2">as </span><span class="s1">pd</span>
+<span class="s2">from </span><span class="s1">sklearn.datasets </span><span class="s2">import </span><span class="s1">load_iris</span>
+<span class="s2">from </span><span class="s1">sklearn.decomposition </span><span class="s2">import </span><span class="s1">PCA</span>
+
+<span class="s0"># Load the Iris dataset</span>
+<span class="s1">iris = load_iris()</span>
+<span class="s1">X = iris.data</span>
+<span class="s1">y = iris.target </span>
+
+<span class="s0"># Convert labels to numeric using astype('category').cat.codes</span>
+<span class="s1">y_numeric = pd.Series(y).astype(</span><span class="s3">'category'</span><span class="s1">).cat.codes</span>
+
+<span class="s0"># Perform PCA with 2 components</span>
+<span class="s1">pca = PCA(n_components=</span><span class="s3">2</span><span class="s1">)</span>
+<span class="s1">X_pca = pca.fit_transform(X)</span>
+
+<span class="s0"># Create a DataFrame with the projected data</span>
+<span class="s1">pca_df = pd.DataFrame(X_pca, columns=[</span><span class="s3">'PC1'</span><span class="s1">, </span><span class="s3">'PC2'</span><span class="s1">])</span>
+
+
+<span class="s0"># Add back the species column for hue</span>
+<span class="s1">pca_df[</span><span class="s3">'species'</span><span class="s1">] = iris.target_names[y]</span>
+
+<span class="s0"># Plot the entire Iris dataset projected into 2 dimensions using Seaborn</span>
+<span class="s1">sns.scatterplot(data=pca_df, x=</span><span class="s3">'PC1'</span><span class="s1">, y=</span><span class="s3">'PC2'</span><span class="s1">, hue=</span><span class="s3">'species'</span><span class="s1">, palette=</span><span class="s3">'viridis'</span><span class="s1">)</span>
+<span class="s1">plt.title(</span><span class="s3">'Iris Dataset Projected into 2 Dimensions with PCA'</span><span class="s1">)</span>
+<span class="s1">plt.show()</span>
+<span class="s0">#%% md 
+</span><span class="s1">#### 4.4 **[2pt]** Explain (in English) the relationship between (classic) recommender systems and denoising. Then go one step further: to understand the current state of the art (not covered in the lecture), explain a recommender system in term of _mapping_. 
+</span><span class="s0">#%% md 
+</span><span class="s1">- Modern recommender systems rarely use matrix decomposition approaches. Better results have been obtained modeling the mapping directly with flexible, generic function approximators with high generalization capabilities such as neural networks. 
+</span><span class="s0">#%% md 
+</span><span class="s1">Classic recommender systems aim to suggest personalized content based on past user interactions. They often use matrix decomposition to understand user preferences and item characteristics. Denoising comes in when we need to fill in missing values in the interaction matrix to improve recommendations. 
+ 
+In modern systems, we've moved beyond matrix methods to more flexible approaches like neural networks. These systems directly learn from user-item interactions, capturing complex patterns for better recommendations. 
+ 
+A recommender system essentially maps user and item features to predicted preferences. By learning this mapping, it can make accurate predictions even for new users or items. This mapping approach is more adaptable and scalable compared to traditional methods. It can capture non-linear relationships and complex patterns in the data, leading to more accurate and personalized recommendations. 
+</span><span class="s0">#%% md 
+</span><span class="s1"># At the end of the exercise 
+</span><span class="s0">#%% md 
+</span><span class="s1">Bonus question with no points! Answering this will have no influence on your scoring, not at the assignment and not towards the exam score -- really feel free to ignore it with no consequence. But solving it will reward you with skills that will make the next lectures easier, give you real applications, and will be good practice towards the exam. 
+ 
+The solution for this questions will not be included in the regular lab solutions pdf, but you are welcome to open a discussion on the Moodle: we will support your addressing it, and you may meet other students that choose to solve this, and find a teammate for the next assignment that is willing to do things for fun and not only for score :) 
+</span><span class="s0">#%% md 
+</span><span class="s1">#### BONUS **[ZERO pt]** Clustering is the core of UL. Master $k$-means with this [[tutorial]](https://towardsdatascience.com/k-means-clustering-algorithm-applications-evaluation-methods-and-drawbacks-aa03e644b48a). 
+</span><span class="s0">#%% md 
+</span><span class="s1">#### BONUS **[ZERO pt]** Curious about implementing SVD in Python? It's not hard, here's a good tutorial: [[link]](https://machinelearningmastery.com/singular-value-decomposition-for-machine-learning/). 
+</span><span class="s0">#%% md 
+</span><span class="s1">#### BONUS **[ZERO pt]** Over the years, I found that whipping out a quick PCA often makes visual analysis of complex data much clearer and with minimal investment. Follow [this tutorial](http://bebi103.caltech.edu.s3-website-us-east-1.amazonaws.com/2015/tutorials/r5_pca.html) to get some experience at it. Challenge: no copy+paste allowed, type everything: muscle memory is much more effective at retaining experience than passive study. Particularly useful is the discussion at the end: learn that Dimensionality Reduction _hides_ information!! It is extremely dangerous to found your decisions on a PCA plot on a subset of axis (e.g. 2), people have lost entire careers on that! As always, each tools has its own utility and drawbacks, and you need to learn the consequences BEFORE you blindly call a library someone else wrote and bet your whole career on its output. :) 
+</span><span class="s0">#%% md 
+</span><span class="s1">#### BONUS **[ZERO pt]** Dictionary-based learning has tons of applications. This scikit-learn page contains a good explanation, reference to a library algorithm, an example, and even a link to the paper which published the algorithm [[link]](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.DictionaryLearning.html). I definitely suggest you have a good look at it. 
+</span><span class="s0">#%% md 
+</span><span class="s1">#### BONUS **[ZERO pt]** Once you have a dictionary, you can learn about Sparse Coding here: [[link]](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.SparseCoder.html). If you want to see a cool application, Google for &quot;super resolution&quot;: although some recent results use Neural Networks, early Sparse Coding results were used to detect congenital heart problems in newborns, where their hearts are too small for defects to be visible on normal MRI scans. *Enhance! (cit.)* 
+</span><span class="s0">#%% md 
+</span><span class="s1">### Final considerations 
+</span><span class="s0">#%% md 
+</span><span class="s1">- Supervised Learning implies the presence of a _supervisor_ in the data preparation, an expert *oracle* that provides the *correct* labels. This is typically either a human (which means limited data, human errors, time constraints, etc.), or (lately more common) another algorithm that is trusted to be exact (but have you ever heard of bug-free code?). In Deep Reinforcement Learning we will see that the reward function is learned through SL; in Self-Supervised Learning and in Embeddings applications it is typically an Unsupervised Learning algorithm to provide the oracle. 
+- All applications of UL stem from two concepts: 
+    - **Similarity**: similar things are put together, different things are separated. 
+    - **Information**: data contains redundancy and noise which can be mitigated by studying/extracting global patterns and references. What interests us is the underlying *information*, the true behavior of the underlying generating function. 
+- Unsupervised Learning is almost always present one way or another in complex applications, yet rarely recognized or credited for what it is -- it's always called something like &quot;embedding&quot;, &quot;pre-processing&quot;, &quot;cleaning&quot;, &quot;aggregation&quot; etc. Plain &quot;UL&quot; is so old school that nobody wants to say they are doing it, basing their whole fancy Deep Learning models on its output. Learn to recognize when UL is applied, and the competence you gained today will find more applications than you imagine.</span></pre>
+</body>
+</html>

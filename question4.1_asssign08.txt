@@ -1,0 +1,82 @@
+import numpy as np
+import pandas as pd
+
+# 1. Patch the missing value with the average of the values above and below
+def patch_missing_value(data, row_idx, col_idx):
+    above_value = data.iloc[row_idx - 1, col_idx]
+    below_value = data.iloc[row_idx + 1, col_idx]
+    patched_value = (above_value + below_value) / 2
+    data.iloc[row_idx, col_idx] = patched_value
+
+# 2. Perform SVD decomposition
+def svd_decomposition(data):
+    u, s, vh = np.linalg.svd(data, full_matrices=False)
+    return u, s, vh
+
+# 3. Drop the least contributing eigenvector
+def drop_least_contributing_eigenvector(u, s, vh):
+    min_idx = np.argmin(s)
+    s[min_idx] = 0
+    u[:, min_idx] = 0
+    vh[min_idx, :] = 0
+    return u, s, vh
+
+# 4. Reconstruct the data matrix
+def reconstruct_data(u, s, vh):
+    sigma = np.diag(s)
+    reconstructed_data = np.dot(u, np.dot(sigma, vh))
+    return reconstructed_data
+
+# 5. Calculate the absolute difference between original and reconstructed values
+def calculate_absolute_difference(original_value, reconstructed_value):
+    abs_diff = np.abs(original_value - reconstructed_value)
+    return abs_diff
+
+# 6. Iterate the denoising process
+def iterative_denoising(data, target_row_idx, target_col_idx, num_iterations):
+    errors = []
+    for _ in range(num_iterations):
+        patch_missing_value(data, target_row_idx, target_col_idx)
+        u, s, vh = svd_decomposition(data.values)
+        u, s, vh = drop_least_contributing_eigenvector(u, s, vh)
+        reconstructed_data = reconstruct_data(u, s, vh)
+        reconstructed_value = reconstructed_data[target_row_idx, target_col_idx]
+        original_value = data.iloc[target_row_idx, target_col_idx]
+        abs_diff = calculate_absolute_difference(original_value, reconstructed_value)
+        errors.append(abs_diff)
+    return reconstructed_data, errors
+
+# Load the Iris dataset
+iris = sns.load_dataset('iris')
+
+# Select the value in row index 110, column index 1
+target_row_idx = 110
+target_col_idx = 1
+
+# Store the original value before patching
+original_value = iris.iloc[target_row_idx, target_col_idx]
+
+# Patch the missing value
+patch_missing_value(iris, target_row_idx, target_col_idx)
+
+# Define the number of iterations for iterative denoising
+num_iterations = 50
+
+# Perform iterative denoising
+reconstructed_data, errors = iterative_denoising(iris.drop(columns=['species']), target_row_idx, target_col_idx, num_iterations)
+
+# Calculate the final reconstructed value
+final_reconstructed_value = reconstructed_data[target_row_idx, target_col_idx]
+
+# Print the absolute difference between the original and reconstructed values
+print(original_value)
+print(final_reconstructed_value)
+print("Absolute difference between original and reconstructed values:", np.abs(original_value - final_reconstructed_value))
+
+# Plot the errors at each iteration
+import matplotlib.pyplot as plt
+plt.plot(errors)
+plt.xlabel('Iteration')
+plt.ylabel('Absolute Difference')
+plt.title('Absolute Difference vs. Iteration')
+plt.show() 
