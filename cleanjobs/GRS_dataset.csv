@@ -1,0 +1,108 @@
+GROUP 3,"11, 15,29",,,,,,,,GROUP 7,"1, 6, 29",,,
+,,MOVIES,U11,U15,U29,,,AgrS: LEAST MISERY,,,U1,U6 ,U29
+,0,"Dark Knight, The",4,3.861111,4.5,,,3.86,,,4,5,4.5
+,1,"Lord of the Rings: The Return of the King, The",4.5,5,2.5,,,2.50,,,3.5,4,2.5
+,2,"Bourne Ultimatum, The",4,5,4.5,,,4.00,,,3.5,3,4.5
+,3,WALL∑E,5,4.5,4.5,,,4.50,,,1.5,2.5,4.5
+,4,Finding Nemo,5,5,3,,,3.00,,,2.5,2,3
+,5,"Incredibles, The",4.5,4.5,,,,4.50,,,2.5,3,
+,6,Ratatouille,4.5,4,3,,,3.00,,,3.5,2,3
+,7,"Monsters, Inc.",4.5,5,3.5,,,3.50,,,4,,3.5
+,8,Shrek,5,5,3.5,,,3.50,,,4,3.5,3.5
+,9,Schindler's List,,,4.5,,,4.50,,,5,4,4.5
+,10,There's Something About Mary,4.5,3,3.5,,,3.00,,,3,4,3.5
+,11,Pirates of the Caribbean: The Curse of the Black Pearl,5,4.5,3.5,,,3.50,,,2.5,4,3.5
+,12,"Other Side of the Bed, The",3.5,4.5,3,,,3.00,,,3,3.5,3
+,13,Pulp Fiction,4.5,,4,,,4.00,,,3.5,4.5,4
+,14,Sin City,2.5,,3.5,,,2.50,,,3.5,4,3.5
+,15,Bowling for Columbine,5,4,4,,,4.00,,,3.5,3.5,4
+,16,Super Size Me,,,3,,,3.00,,,4.5,2.5,3
+,17,City of God,,,4,,,4.00,,,3.5,,4
+,18,Pan's Labyrinth,4.5,4,4,,,4.00,,,4.5,3,4
+,19,Star Wars: Episode III - Revenge of the Sith,5,5,4,,,4.00,,,0.5,4,4
+,20,Fantastic Four,1.5,3.5,2.5,,,1.50,,,3.5,2.5,2.5
+,21,Exorcist: The Beginning,,,,,,0.00,,,3.5,,
+,22,Seven,3.5,,5,,,3.50,,,4.5,4.5,5
+,23,"Game, The",2.5,,3,,,2.50,,,3.5,,3
+,24,Pretty Woman,3,3.5,3,,,3.00,,,4.5,3.5,3
+,25,"Matrix, The",4.5,4,4.5,,,4.00,,,4,5,4.5
+,26,Terminator 2: Judgment Day,3.5,,,,,3.50,,,3.5,4,
+,27,X-Men,4,4.5,3.5,,,3.50,,,3,4,3.5
+,28,"Sixth Sense, The",3,3.5,3.5,,,3.00,,,4,4,3.5
+,29,Mission: Impossible III,,,,,,0.00,,,2.5,3,
+,30,300,,,3.5,,,3.50,,,4.5,4.5,3.5
+,31,Troy,2,2,2.5,,,2.00,,,3.5,3.5,2.5
+,32,Transformers,,,,,,0.00,,,3.5,3,
+,33,No Country for Old Men,,,3,,,3.00,,,3.5,3,3
+,34,"Sea Inside, The",4.5,4.5,2.5,,,2.50,,,4,,2.5
+,35,"Pianist, The",,,3.5,,,3.50,,,3.5,4,3.5
+,36,Million Dollar Baby,,,3,,,3.00,,,3.5,3.5,3
+,37,"Orphanage, The",2.5,,3.5,,,2.50,,,3.5,3.5,3.5
+,38,Titanic,3.5,4,2.5,,,2.50,,,,3.5,2.5
+,39,"Silence of the Lambs, The",2.5,,4,,,2.50,,,4.5,4,4
+,40,Brokeback Mountain,4,3.5,3.5,,,3.50,,,3.5,2.5,3.5
+,41,[Rec],5,4.5,2,,,2.00,,,3.5,,2
+,42,Volver,,,3,,,3.00,,,,3.5,3
+,43,Sweeney Todd: The Demon Barber of Fleet Street,3.5,4,4.5,,,3.50,,,2,3.5,4.5
+,44,Changeling,,,3,,,3.00,,,3.5,4,3
+,45,"English Patient, The",3,,3.5,,,3.00,,,4,,3.5
+,46,Hotel Rwanda,,,3,,,3.00,,,3.5,,3
+,47,High School Musical,1.5,3.5,,,,1.50,,,3.5,,
+,48,Fahrenheit 9/11,4,4,3,,,3.00,,,4.5,,3
+,49,Mamma Mia!,4.5,5,3,,,3.00,,,3.5,,3
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,MOVIES,AgrS: LEAST MISERY,Most Similar (not seen) movie,Sim (rated movie vs unseen movie),,,,,,,,
+,,Schindler's List,4.53,"10,000 B.C.",0.408,,,,,,,,
+,,"Pianist, The",4.21,"10,000 B.C.",0.408,,,,,,,,
+,,Hotel Rwanda,4.18,"10,000 B.C.",0.408,,,,,,,,
+,,City of God,4.11,"10,000 B.C.",0.667,,,,,,,,
+,,Bowling for Columbine,4.07,___,,,,,,,,,
+,,Shrek,4.00,Forgetting Sarah Marshall,0.632,,,"Chronicles of Narnia: Prince Caspian, The",0.632,,,,
+,,"Silence of the Lambs, The",4.00,Burn After Reading,0.408,,,,,,,,
+,,Fahrenheit 9/11,3.87,,,,,,,,,,
+,,WALL∑E,3.79,,,,,,,,,,
+,,Super Size Me,3.73,,,,,,,,,,
+,,Changeling,3.73,,,,,Most Similar (not seen) movie,Sim (rated movie vs unseen movie),Predicted Ratings Calculation,Predicted Ratings,"Ranked List Recommendation
+(according to the values of the predicted ratings)",
+,,Sweeney Todd: The Demon Barber of Fleet Street,3.72,,,,,"10,000 B.C.",0.408, * 0.408,0,"10,000 B.C.",
+,,Mamma Mia!,3.58,,,,,"10,000 B.C.",0.408, * 0.408,0,Forgetting Sarah Marshall,
+,,Finding Nemo,3.50,,,,,"10,000 B.C.",0.408, * 0.408,0,Sex and the City,
+,,Seven,3.50,,,,,"10,000 B.C.",0.667, * 0.667,0,"Chronicles of Narnia: Prince Caspian, The",
+,,X-Men,3.50,,,,,Forgetting Sarah Marshall,0.632, * 0.632,0,Burn After Reading,
+,,"English Patient, The",3.46,,,,,Sex and the City,0.632, * 0.632,0,,
+,,"Incredibles, The",3.00,,,,,"Chronicles of Narnia: Prince Caspian, The",0.632, * 0.632,0,,
+,,Ratatouille,3.00,,,,,Burn After Reading,0.408, * 0.408,0,,
+,,Pulp Fiction,3.00,,,,,,,,,,
+,,Sin City,3.00,,,,,,,,,,
+,,"Game, The",3.00,,,,,,,,,,
+,,Million Dollar Baby,3.00,,,,,,,,,,
+,,Transformers,2.90,,,,,,,,,,
+,,"Dark Knight, The",2.50,,,,,,,,,,
+,,"Bourne Ultimatum, The",2.50,,,,,,,,,,
+,,"Other Side of the Bed, The",2.50,,,,,,,,,,
+,,Fantastic Four,2.50,,,,,,,,,,
+,,Exorcist: The Beginning,2.50,,,,,,,,,,
+,,Pretty Woman,2.50,,,,,,,,,,
+,,300,2.50,,,,,,,,,,
+,,No Country for Old Men,2.50,,,,,,,,,,
+,,"Orphanage, The",2.50,,,,,,,,,,
+,,Titanic,2.50,,,,,,,,,,
+,,Brokeback Mountain,2.50,,,,,,,,,,
+,,"Monsters, Inc.",2.00,,,,,,,,,,
+,,Pirates of the Caribbean: The Curse of the Black Pearl,2.00,,,,,,,,,,
+,,Mission: Impossible III,2.00,,,,,,,,,,
+,,Troy,2.00,,,,,,,,,,
+,,High School Musical,2.00,,,,,,,,,,
+,,Pan's Labyrinth,1.50,,,,,,,,,,
+,,Star Wars: Episode III - Revenge of the Sith,1.50,,,,,,,,,,
+,,There's Something About Mary,0.50,,,,,,,,,,
+,,Terminator 2: Judgment Day,0.50,,,,,,,,,,
+,,"Sea Inside, The",0.50,,,,,,,,,,
+,,[Rec],0.50,,,,,,,,,,
+,,"Lord of the Rings: The Return of the King, The",0.00,,,,,,,,,,
+,,"Matrix, The",0.00,,,,,,,,,,
+,,"Sixth Sense, The",0.00,,,,,,,,,,
+,,Volver,0.00,,,,,,,,,,
